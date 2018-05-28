@@ -90,9 +90,11 @@ module.exports = function (superagent, config, logger) {
       // superagent 3.6+
 
       const originalUrl = this.url;
+      const originalQuery = this._query.slice();
       isNodeServer ? this.request() : this._finalizeQueryString(this);
       path = this.url;
       this.url = originalUrl;
+      this._query = originalQuery;
     } else {
       // superagent < 3.6
 
@@ -213,7 +215,7 @@ module.exports = function (superagent, config, logger) {
     if (logEnabled) {
       currentLog.error = error;
     }
-    
+
     // Check if a callback for progress events was specified as part of the request
     var progressEventsUsed = isNodeServer ? !!this._formData : this.hasListeners && this.hasListeners('progress');
 
